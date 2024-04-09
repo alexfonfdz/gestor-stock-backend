@@ -9,6 +9,15 @@ export const register = async (req, res) => {
 
         const passwordHash = await bcrypt.hash(password, 10);
 
+        const emailFound = await User.findOne({email, statusUser: true }).select("email");
+        if(emailFound) return res.status(409).json({message: "Correo electrónico ya registrado"});
+        if(email === "" || password === "" || username === "" || nameOrganization === "") return res.status(400).json({message: "Por favor, rellene todos los campos"});
+        if(password.length < 8) return res.status(400).json({message: "La contraseña debe tener al menos 8 caracteres"});
+        if(username.length < 4) return res.status(400).json({message: "El nombre de usuario debe tener al menos 4 caracteres"});
+        if(nameOrganization.length < 3) return res.status(400).json({message: "El nombre de la organización debe tener al menos 3 caracteres"});
+        if(!email.includes("@") || !email.includes(".")) return res.status(400).json({message: "Correo electrónico inválido"});
+        
+
         const newOrganization = new Organization({
             nameOrganization,
         });
@@ -48,7 +57,7 @@ export const login = async (req, res) => {
     
     try{
 
-        const userFound = await User.findOne({email});
+        const userFound = await User.findOne({email, statusUser: true });
 
         if(!userFound) return res.status(400).json({message: "Usuario no encontrado"});
 
