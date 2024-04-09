@@ -1,4 +1,6 @@
-import { User, Organization, UserType } from "../models/user.model.js";
+import User from "../models/user.model.js";
+import Organization from "../models/organization.model.js";
+import UserType from "../models/userType.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
 
